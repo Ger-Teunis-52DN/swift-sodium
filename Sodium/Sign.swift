@@ -109,4 +109,18 @@ public class Sign {
         }
         return message
     }
+    
+    public func multiply(secretKey: SecretKey, publicKey: PublicKey) -> NSData? {
+        if secretKey.length != SecretKeyBytes || publicKey.length != PublicKeyBytes {
+            return nil
+        }
+        guard let result = NSMutableData(length: Int(crypto_scalarmult_BYTES)) else {
+            return nil
+        }
+        
+        if crypto_scalarmult(result.mutableBytesPtr, secretKey.bytesPtr, publicKey.bytesPtr) != 0 {
+            return nil
+        }
+        return result
+    }
 }
